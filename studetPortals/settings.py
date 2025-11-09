@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-dy9%=i)xa(!rp)yc49u%c0i)(t#+=erfg8ksl4x17+#8ni5sx9'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dy9%=i)xa(!rp)yc49u%c0i)(t#+=erfg8ksl4x17+#8ni5sx9')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = []
 
@@ -249,8 +253,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#SUPABASE_URL = os.environ.get("https://jyifbkgzfgfdpnqorwzw.supabase.co")
-SUPABASE_URL = "https://jyifbkgzfgfdpnqorwzw.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5aWZia2d6ZmdmZHBucW9yd3p3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5MTgwNjksImV4cCI6MjA3NzQ5NDA2OX0.F46Y_Q9ziuSBkRdFUMWdtZn9XBBKLSWzZTJ9iwm5QRE"
-#SUPABASE_KEY = os.environ.get("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5aWZia2d6ZmdmZHBucW9yd3p3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTkxODA2OSwiZXhwIjoyMDc3NDk0MDY5fQ.kUPATqfjOzZAhOzFnaXGah-nwVFMQ8-GJJVFqYnTycs")  # server-side
-SUPABASE_BUCKET_NAME = "reports"   # you’ll create this bucket in Supabase Storage
+# Supabase Configuration - Load from environment variables
+SUPABASE_URL = os.getenv('SUPABASE_URL')
+SUPABASE_KEY = os.getenv('SUPABASE_KEY')
+SUPABASE_BUCKET_NAME = os.getenv('SUPABASE_BUCKET_NAME', 'reports')
