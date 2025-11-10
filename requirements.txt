@@ -35,7 +35,6 @@ pydantic_core==2.41.5
 pygame==2.6.1
 PyJWT==2.10.1
 python-dateutil==2.9.0.post0
-python-dotenv==1.0.0
 realtime==2.23.2
 requests==2.32.5
 s3transfer==0.14.0
@@ -54,3 +53,17 @@ tzdata==2025.2
 urllib3==2.5.0
 websockets==15.0.1
 yarl==1.22.0
+
+# REST API Dependencies
+djangorestframework==3.14.0
+djangorestframework-simplejwt==5.3.0
+django-cors-headers==4.3.1
+drf-spectacular==0.27.0
+django-filter==23.5
+
+# Production Dependencies
+gunicorn==21.2.0
+psycopg2-binary==2.9.9
+dj-database-url==2.1.0
+python-decouple==3.8
+whitenoise==6.6.0

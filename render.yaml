@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: student-portal-api
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn studetPortals.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.14
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: student-portal-db
+          property: connectionString
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: SUPABASE_BUCKET_NAME
+        value: reports
+      - key: CORS_ALLOWED_ORIGINS
+        value: http://localhost:3000,http://localhost:8081,http://localhost:19000
+
+databases:
+  - name: student-portal-db
+    databaseName: studentportal
+    user: studentportal

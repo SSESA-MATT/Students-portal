@@ -85,6 +85,7 @@ class CourseReview (models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     rating = models.IntegerField(choices=[(i, str(i)) for i in range(1, 6)])
     comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.course.name} - {self.rating} by {self.student.name}"
