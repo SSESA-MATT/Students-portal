@@ -1,370 +1,165 @@
-# 🎓 Student Portal - Academic Management System
+# Django Student Portal
 
-[![Django](https://img.shields.io/badge/Django-5.2.8-green.svg)](https://www.djangoproject.com/)
-[![DRF](https://img.shields.io/badge/DRF-3.14.0-red.svg)](https://www.django-rest-framework.org/)
-[![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+A comprehensive student management system built with Django 5.2.8, featuring course management, grade tracking, student reports, and Supabase integration for cloud storage.
 
-A comprehensive academic management system with Django backend and RESTful API for web and mobile applications.
+## Features
 
-## ✨ Features
+- 👥 **User Management**: Students, Lecturers, and Admin roles
+- 📚 **Course Management**: Create, edit, and manage courses
+- 📊 **Grade Tracking**: Record and view student grades with GPA calculation
+- 📝 **Course Reviews**: Students can submit reviews for courses
+- 📄 **Student Reports**: Generate comprehensive student academic reports
+- ☁️ **Cloud Storage**: Supabase integration for file storage
 
-### 👨‍🎓 Students
-- View enrolled courses and available courses
-- Track grades with automatic GPA/CGPA calculation
-- Submit and manage course reviews
-- Monitor academic progress
+## Prerequisites
 
-### 👨‍🏫 Lecturers
-- Manage assigned courses
-- Enter and update student grades
-- View course reviews and feedback
-- Track student enrollment
-
-### 👨‍💼 Administrators
-- Complete system management
-- User and course administration
-- Generate comprehensive reports
-- CSV export with automatic Supabase backup
-
-## 🚀 Quick Start
-
-### Prerequisites
 - Python 3.11+
-- pip
-- Virtual environment (recommended)
-- PostgreSQL (for production)
+- pip (Python package manager)
+- Git
 
-### Installation
+## Setup Instructions
 
-1. **Clone the repository**
+### 1. Clone the Repository
+
 ```bash
-git clone https://github.com/SSESA-MATT/Students-portal.git
+git clone <your-repo-url>
 cd Portal-master
 ```
 
-2. **Create and activate virtual environment**
+### 2. Create Virtual Environment
+
 ```bash
 python -m venv venv
 
-# Windows
-venv\\Scripts\\activate
+# On Windows
+venv\Scripts\activate
 
-# Linux/Mac
+# On macOS/Linux
 source venv/bin/activate
 ```
 
-3. **Install dependencies**
+### 3. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-4. **Setup environment variables**
+### 4. Configure Environment Variables
+
+Copy the example environment file and update it with your credentials:
+
 ```bash
 cp .env.example .env
-# Edit .env with your configuration
 ```
 
-5. **Replace settings file**
+Edit `.env` and add your configuration:
+
+```env
+# Django Settings
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Supabase Configuration
+SUPABASE_URL=your-supabase-url
+SUPABASE_KEY=your-supabase-anon-key
+SUPABASE_BUCKET_NAME=reports
+```
+
+**⚠️ IMPORTANT: Never commit your `.env` file to version control!**
+
+### 5. Run Migrations
+
 ```bash
-# Backup old settings
-cp studetPortals/settings.py studetPortals/settings_backup.py
-
-# Use new API-enabled settings
-cp studetPortals/settings_new.py studetPortals/settings.py
-```
-
-6. **Update CourseReview model**
-
-Add `created_at` field to `reports/models.py`:
-```python
-class CourseReview(models.Model):
-    # ... existing fields ...
-    created_at = models.DateTimeField(auto_now_add=True)  # ADD THIS
-```
-
-7. **Run migrations**
-```bash
-python manage.py makemigrations
 python manage.py migrate
 ```
 
-8. **Create superuser**
+### 6. Create Superuser
+
 ```bash
 python manage.py createsuperuser
 ```
 
-9. **Run development server**
+Follow the prompts to create an admin account.
+
+### 7. Run Development Server
+
 ```bash
 python manage.py runserver
 ```
 
-Visit: http://localhost:8000
+Visit `http://127.0.0.1:8000/` in your browser.
 
-## 📡 API Documentation
+## Project Structure
 
-### API Base URL
 ```
-http://localhost:8000/api/
-```
-
-### Authentication
-The API uses JWT (JSON Web Token) authentication.
-
-**Get Token:**
-```bash
-POST /api/auth/login/
-{
-  "username": "your_username",
-  "password": "your_password"
-}
-
-Response:
-{
-  "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
-  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."
-}
-```
-
-**Use Token:**
-```
-Authorization: Bearer <access_token>
+Portal-master/
+├── manage.py
+├── requirements.txt
+├── .env.example
+├── studetPortals/          # Project settings
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+└── reports/                # Main application
+    ├── models.py           # Database models
+    ├── views.py            # View logic
+    ├── forms.py            # Form definitions
+    ├── urls.py             # URL routing
+    ├── admin.py            # Admin interface
+    ├── decorators.py       # Custom decorators
+    ├── utils.py            # Utility functions
+    ├── migrations/         # Database migrations
+    └── templates/          # HTML templates
+        └── reports/
 ```
 
-### API Endpoints
+## User Roles
 
-#### Students
-- `GET /api/students/` - List students
-- `GET /api/students/me/` - Current student profile
-- `GET /api/students/{id}/` - Student details
-- `POST /api/students/{id}/enroll/` - Enroll in course
-- `POST /api/students/{id}/unenroll/` - Unenroll from course
-- `GET /api/students/{id}/grades/` - Student grades
-- `GET /api/students/{id}/gpa/` - GPA/CGPA
+### Student
+- View enrolled courses
+- Check grades and GPA
+- Submit course reviews
+- View academic reports
 
-#### Courses
-- `GET /api/courses/` - List courses
-- `GET /api/courses/{id}/` - Course details
-- `GET /api/courses/{id}/students/` - Enrolled students
-- `GET /api/courses/{id}/reviews/` - Course reviews
-- `POST /api/courses/` - Create course (lecturer/admin)
+### Lecturer
+- View assigned courses
+- Manage course students
+- Update student grades
+- View course reviews
 
-#### Grades
-- `GET /api/grades/` - List grades
-- `POST /api/grades/` - Create grade (lecturer/admin)
-- `PUT /api/grades/{id}/` - Update grade (lecturer/admin)
+### Admin
+- Full system access
+- User management
+- Course creation and management
+- View all reports and reviews
 
-#### Reviews
-- `GET /api/reviews/` - List reviews
-- `POST /api/reviews/` - Submit review (student)
-- `PUT /api/reviews/{id}/` - Update review
-- `DELETE /api/reviews/{id}/` - Delete review
+## Security Notes
 
-### Interactive API Documentation
-- **Swagger UI**: http://localhost:8000/api/schema/swagger-ui/
-- **ReDoc**: http://localhost:8000/api/schema/redoc/
-- **OpenAPI Schema**: http://localhost:8000/api/schema/
+- **Never commit secrets**: Always use environment variables for sensitive data
+- **Rotate compromised keys**: If you accidentally commit secrets, rotate them immediately
+- **Use strong SECRET_KEY**: Generate a new Django secret key for production
+- **Disable DEBUG in production**: Set `DEBUG=False` in production environments
 
-## 🐳 Docker Deployment
+## Supabase Setup
 
-### Using Docker Compose
+1. Create a Supabase account at https://supabase.com
+2. Create a new project
+3. Create a storage bucket named "reports"
+4. Copy your project URL and anon key to `.env`
 
-1. **Build and run**
-```bash
-docker-compose up -d --build
-```
-
-2. **Run migrations**
-```bash
-docker-compose exec web python manage.py migrate
-```
-
-3. **Create superuser**
-```bash
-docker-compose exec web python manage.py createsuperuser
-```
-
-4. **View logs**
-```bash
-docker-compose logs -f web
-```
-
-## ☁️ Production Deployment
-
-### Railway (Recommended)
-
-1. **Install Railway CLI**
-```bash
-npm install -g @railway/cli
-```
-
-2. **Login and initialize**
-```bash
-railway login
-railway init
-```
-
-3. **Add PostgreSQL**
-```bash
-railway add postgresql
-```
-
-4. **Set environment variables**
-```bash
-railway variables set SECRET_KEY=your-secret-key
-railway variables set DEBUG=False
-railway variables set ALLOWED_HOSTS=your-domain.com
-```
-
-5. **Deploy**
-```bash
-railway up
-```
-
-### Heroku
-
-1. **Install Heroku CLI**
-
-2. **Create app**
-```bash
-heroku create your-app-name
-```
-
-3. **Add PostgreSQL**
-```bash
-heroku addons:create heroku-postgresql:mini
-```
-
-4. **Set environment variables**
-```bash
-heroku config:set SECRET_KEY=your-secret-key
-heroku config:set DEBUG=False
-```
-
-5. **Deploy**
-```bash
-git push heroku master
-heroku run python manage.py migrate
-heroku run python manage.py createsuperuser
-```
-
-## 📱 Mobile App Development
-
-### React Native (Recommended)
-
-See [MOBILE_APP_GUIDE.md](MOBILE_APP_GUIDE.md) for complete mobile app setup.
-
-**Quick Start:**
-```bash
-npx create-expo-app StudentPortalApp
-cd StudentPortalApp
-npm install axios @react-navigation/native
-```
-
-**API Client Example:**
-```javascript
-import axios from 'axios';
-
-const API_URL = 'http://your-backend-url/api';
-
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Login
-export const login = async (username, password) => {
-  const response = await axios.post(`${API_URL}/auth/login/`, {
-    username,
-    password,
-  });
-  return response.data;
-};
-
-// Get current student
-export const getCurrentStudent = async (token) => {
-  const response = await api.get('/students/me/', {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return response.data;
-};
-```
-
-## 🧪 Testing
-
-```bash
-# Run tests
-python manage.py test
-
-# Run with coverage
-coverage run --source='.' manage.py test
-coverage report
-```
-
-## 📊 Database Schema
-
-### Core Models
-- **Student**: User profile with GPA tracking
-- **Course**: Course information and enrollment
-- **Grade**: Student grades with automatic letter grading
-- **CourseReview**: Course feedback and ratings
-- **Profile**: User roles (Student/Lecturer/Admin)
-
-### Relationships
-- Students ↔ Courses (Many-to-Many)
-- Students ↔ Grades ↔ Courses
-- Students ↔ Reviews ↔ Courses
-
-## 🔒 Security
-
-- JWT authentication with refresh tokens
-- Role-based access control
-- CORS configured for mobile apps
-- Environment variable for sensitive data
-- CSRF protection for web forms
-- SQL injection protection (Django ORM)
-- XSS protection enabled
-
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📝 License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is for educational purposes.
 
-## 👥 Authors
+## Support
 
-- **SSESA-MATT** - [GitHub](https://github.com/SSESA-MATT)
-
-## 🙏 Acknowledgments
-
-- Django REST Framework
-- Supabase for backup storage
-- All contributors and testers
-
-## 📞 Support
-
-For support, email your-email@example.com or create an issue in the repository.
-
-## 🗺️ Roadmap
-
-- [x] REST API implementation
-- [x] JWT authentication
-- [x] API documentation
-- [ ] Mobile app (React Native)
-- [ ] Real-time notifications
-- [ ] Assignment submission system
-- [ ] Attendance tracking
-- [ ] Parent portal
-- [ ] Analytics dashboard
-
----
-
-**Made with ❤️ for education**
+For issues or questions, please open an issue in the repository.

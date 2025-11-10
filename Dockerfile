@@ -35,22 +35,19 @@ RUN apt-get update && apt-get install -y \
     libpq5 \
     && rm -rf /var/lib/apt/lists/*
 
-# Create non-root user first
-RUN useradd -m -u 1000 django
-
-# Copy Python dependencies from builder to django user's directory
-COPY --from=builder /root/.local /home/django/.local
-RUN chown -R django:django /home/django/.local
+# Copy Python dependencies from builder
+COPY --from=builder /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
 
 # Copy project files
-COPY --chown=django:django . .
-
-# Switch to django user
-USER django
-ENV PATH=/home/django/.local/bin:$PATH
+COPY . .
 
 # Collect static files
 RUN python manage.py collectstatic --noinput || true
+
+# Create non-root user
+RUN useradd -m -u 1000 django && chown -R django:django /app
+USER django
 
 # Expose port
 EXPOSE 8000
